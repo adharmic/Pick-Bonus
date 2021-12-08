@@ -13,9 +13,7 @@ public class GlobalVariables : MonoBehaviour
     // 4. Revert all of the above when play is pressed
     // 5. Add delay between opening anticipation and open animation
     // 6. Notify the user if they've won any money (MODAL BOX?)
-    // 7. When user gets pooper, allow option to play again and reset game state.
-
-
+    // 7. When user gets pooper, update balance and allow option to play again and reset game state.
 
     // private bool _playing = false;
     
@@ -27,6 +25,12 @@ public class GlobalVariables : MonoBehaviour
 
     // Denomination increment value
     private float _denoinc = .25f;
+
+    public GameObject[] chests;
+
+    public GameObject[] mysteryboxes;
+
+    public CanvasGroup chestbuttons;
 
     public static float _balance = 10f;
     public static float _denominator = .25f;
@@ -46,6 +50,35 @@ public class GlobalVariables : MonoBehaviour
         Denom.SetText(_denominator.ToString("C"));
         Win.SetText(_win.ToString("C"));
         Sub.interactable = false;
+        DisableChests();
+    }
+
+    private void ResetGame() {
+        chestbuttons.interactable = false;
+    }
+
+    private void DisableChests() {
+        foreach (var item in chests) {
+            item.SetActive(false);
+        }
+    }
+
+    private void EnableChests() {
+        foreach (var item in chests) {
+            item.SetActive(true);
+        }
+    }
+
+    private void MysteryOn() {
+        foreach (var item in mysteryboxes) {
+            item.SetActive(true);
+        }
+    }
+
+    private void MysteryOff() {
+        foreach (var item in mysteryboxes) {
+            item.SetActive(false);
+        }
     }
 
     public void IncreaseDenom() {
@@ -76,6 +109,9 @@ public class GlobalVariables : MonoBehaviour
         if(SubtractBalance()) {
             // Main gameplay code here
             Play.interactable = false;
+            chestbuttons.interactable = true;
+            MysteryOff();
+            EnableChests();
         }
         else {
             Debug.Log("Not enough money!");
@@ -83,12 +119,16 @@ public class GlobalVariables : MonoBehaviour
     }
 
     public bool SubtractBalance() {
-        if(_denominator > _balance) {
+        if(_denominator > _balance) { 
             return false;
         }
         _balance -= _denominator;
         Balance.SetText(_balance.ToString("C"));
         return true;
+    }
+
+    public void DisableChest(GameObject button) {
+        
     }
 
     public void TestOutput() {
