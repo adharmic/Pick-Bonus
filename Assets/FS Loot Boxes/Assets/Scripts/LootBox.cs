@@ -122,9 +122,6 @@ public class LootBox : MonoBehaviour
     /// <summary>
     /// Open the box.
     /// </summary>
-    public void DelayedOpen() {
-        Invoke("Open", 2f);
-    }
     public void Open ()
     {
         // avoid opening when it's already open
