@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class ChestShake : MonoBehaviour
 {
@@ -17,6 +19,8 @@ public class ChestShake : MonoBehaviour
 	public float shake_intensity = 0f;
 
 	private float temp_shake_intensity = 0;
+
+	public TextMeshProUGUI winvalue;
 	
 	void Update (){
 		if (temp_shake_intensity > 0){
@@ -30,6 +34,8 @@ public class ChestShake : MonoBehaviour
 		}
 		else if(shook && gameObject.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Closed")) {
 			gameObject.GetComponent<LootBox>().Open();
+			winvalue.GetComponent<VisibilityToggle>().Toggle();
+			shook = false;
 		}
 	}
 	

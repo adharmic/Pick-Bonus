@@ -409,6 +409,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1797231395635912585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1126,6 +1138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shake_decay: 0.001
   shake_intensity: 0.2
+  winvalue: {fileID: 6323054077957289479}
 --- !u!1 &5689474816380678160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,6 +1225,7 @@ GameObject:
   - component: {fileID: 767352861520917892}
   - component: {fileID: 4722752427120860713}
   - component: {fileID: 6323054077957289479}
+  - component: {fileID: 5904971965647346096}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -1335,3 +1349,15 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5904971965647346096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6878905387958286551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1acc7f036f3b37040b949894164ac735, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

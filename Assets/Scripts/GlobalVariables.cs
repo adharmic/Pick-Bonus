@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class GlobalVariables : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class GlobalVariables : MonoBehaviour
     // 7. When user gets pooper, update balance and allow option to play again and reset game state.
     // 8. Add weighted random number generation for multiplier value tier - DONE 12/8
     // 9. Pick random number again to decide exact multiplier value and assign that to our predetermined total - DONE 12/8
-    // 10. Another random number to decide how many chests the player will be opening this turn
+    // 10. Another random number to decide how many chests the player will be opening this turn - DONE 12/8
     // 11. Divide the pretotal by the number of chests (randomly) in increments of 5 cents. 
     // 12. Create graphic for pooper
 
@@ -143,6 +144,13 @@ public class GlobalVariables : MonoBehaviour
             MysteryOff();
             EnableChests();
             GetTotal();
+            Debug.Log("PRETOTAL: " + pretotal);
+            if (pretotal != 0) {
+                AssignChests();
+            }
+            else {
+                chestvalues = new int[1] {0};
+            }
         }
         else {
             Debug.Log("Not enough money!");
@@ -150,26 +158,52 @@ public class GlobalVariables : MonoBehaviour
     }
     
     public void AssignChests() {
-        int numchests = Random.Range(1, 10);
-        chestvalues = new int[numchests];
+        int numchests = UnityEngine.Random.Range(1, 8);
+        int nickels = (int)(pretotal * 20);
+        chestvalues = new int[numchests+1]; 
+        int[] randomdistro = new int[numchests+1];
+        randomdistro[0] = 0;
+        randomdistro[randomdistro.Length-1] = nickels - numchests;
+        for (int i = 1; i < randomdistro.Length-1; i++) {
+            randomdistro[i] = UnityEngine.Random.Range(1, nickels - numchests);
+        }
+        Array.Sort(randomdistro);
+        for(int i = 0; i < randomdistro.Length-1; i++) {
+            chestvalues[i] = (randomdistro[i+1] - randomdistro[i]) + 1;
+        }
+
+        for(int i = 0; i < randomdistro.Length; i++) {
+            Debug.Log("RANDOM VALUE " + i + ": " + randomdistro[i]);
+        }
+
+        int sum = 0;
+        for(int i = 0; i < chestvalues.Length; i++) {
+            Debug.Log("CHEST VALUE " + i + ": " + chestvalues[i]);
+            sum += chestvalues[i];
+        }
+
+        Debug.Log("EXPECTED TOTAL: " + pretotal*20);
+
+        Debug.Log("ACTUAL TOTAL: " + sum);
+
     }
 
     public void GetTotal() {
-        float tiernum = Random.Range(0, 100);
+        float tiernum = UnityEngine.Random.Range(0, 99);
         if(tiernum <= 49) {
-            int valnum = Random.Range(0, multipliers[0].Length);
+            int valnum = UnityEngine.Random.Range(0, multipliers[0].Length);
             pretotal = multipliers[0][valnum] * _denominator;
         }
         else if(tiernum <= 79) {
-            int valnum = Random.Range(0, multipliers[1].Length);
+            int valnum = UnityEngine.Random.Range(0, multipliers[1].Length);
             pretotal = multipliers[1][valnum] * _denominator;
         }
         else if(tiernum <= 94) {
-            int valnum = Random.Range(0, multipliers[2].Length);
+            int valnum = UnityEngine.Random.Range(0, multipliers[2].Length);
             pretotal = multipliers[2][valnum] * _denominator;
         }
         else {
-            int valnum = Random.Range(0, multipliers[3].Length);
+            int valnum = UnityEngine.Random.Range(0, multipliers[3].Length);
             pretotal = multipliers[3][valnum] * _denominator;
         }
     }
@@ -183,12 +217,25 @@ public class GlobalVariables : MonoBehaviour
         return true;
     }
 
-    public void DisableChest(GameObject button) {
-        
-    }
-
     public void TestOutput() {
         Debug.Log("Mic check 1 2 3");
+    }
+
+    public void ChestOpened(TextMeshProUGUI wonvalue) {
+        float currval = chestvalues[chestsopened];
+        Debug.Log("CURRENT VALUE: " + currval);
+        if (currval == 0) {
+            // END THE GAME!
+            Debug.Log("GAME OVER");
+            wonvalue.SetText("POOPER!");
+        }
+        else {
+            currval /= 20;
+            wonvalue.SetText(currval.ToString("C"));
+            _win += currval;
+            wonvalue.enabled = true;
+            chestsopened++;
+        }
     }
 
 }
