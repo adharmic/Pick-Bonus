@@ -132,12 +132,14 @@ public class GlobalVariables : MonoBehaviour
         if(SubtractBalance()) {
             // Main gameplay code here
             Play.interactable = false;
-            // chestbuttons.interactable = true;
+            chestbuttons.interactable = true;
             ToggleButtons(true);
             ToggleMystery(false);
             ToggleChests(true);
             GetTotal();
-            Debug.Log("PRETOTAL: " + pretotal);
+            _win = 0;
+            Win.SetText(_win.ToString("C"));
+            Title.SetText("PICK BONUS!");
             if (pretotal != 0) {
                 AssignChests();
             }
@@ -147,12 +149,11 @@ public class GlobalVariables : MonoBehaviour
         }
         else {
             Play.interactable = false;
-            Debug.Log("Not enough money!");
         }
     }
     
     public void AssignChests() {
-        int numchests = UnityEngine.Random.Range(1, 8);
+        int numchests = UnityEngine.Random.Range(1, 9);
         int nickels = (int)(pretotal * 20);
         chestvalues = new int[numchests+1]; 
         int[] randomdistro = new int[numchests+1];
@@ -166,39 +167,30 @@ public class GlobalVariables : MonoBehaviour
             chestvalues[i] = (randomdistro[i+1] - randomdistro[i]) + 1;
         }
 
-        for(int i = 0; i < randomdistro.Length; i++) {
-            Debug.Log("RANDOM VALUE " + i + ": " + randomdistro[i]);
-        }
-
-        int sum = 0;
-        for(int i = 0; i < chestvalues.Length; i++) {
-            Debug.Log("CHEST VALUE " + i + ": " + chestvalues[i]);
-            sum += chestvalues[i];
-        }
-
-        Debug.Log("EXPECTED TOTAL: " + pretotal*20);
-
-        Debug.Log("ACTUAL TOTAL: " + sum);
-
     }
 
     public void GetTotal() {
-        float tiernum = UnityEngine.Random.Range(0, 99);
+        float tiernum = UnityEngine.Random.Range(0, 100);
+        int tested;
         if(tiernum <= 49) {
             int valnum = UnityEngine.Random.Range(0, multipliers[0].Length);
             pretotal = multipliers[0][valnum] * _denominator;
+            tested = multipliers[0][valnum];
         }
         else if(tiernum <= 79) {
             int valnum = UnityEngine.Random.Range(0, multipliers[1].Length);
             pretotal = multipliers[1][valnum] * _denominator;
+            tested = multipliers[1][valnum];
         }
         else if(tiernum <= 94) {
             int valnum = UnityEngine.Random.Range(0, multipliers[2].Length);
             pretotal = multipliers[2][valnum] * _denominator;
+            tested = multipliers[2][valnum];
         }
         else {
             int valnum = UnityEngine.Random.Range(0, multipliers[3].Length);
             pretotal = multipliers[3][valnum] * _denominator;
+            tested = multipliers[3][valnum];
         }
     }
 
@@ -211,18 +203,13 @@ public class GlobalVariables : MonoBehaviour
         return true;
     }
 
-    public void TestOutput() {
-        Debug.Log("Mic check 1 2 3");
-    }
-
     public void ChestOpened(TextMeshProUGUI wonvalue) {
         float currval = chestvalues[chestsopened];
-        Debug.Log("CURRENT VALUE: " + currval);
         if (currval == 0) {
             // END THE GAME!
-            Debug.Log("GAME OVER");
             wonvalue.SetText("POOPER!");
             chestbuttons.enabled = false;
+            ToggleButtons(false);
             Invoke("EndGame", 1.5f);
         }
         else {
@@ -240,14 +227,23 @@ public class GlobalVariables : MonoBehaviour
     }
 
     public void EndGame() {
+        chestbuttons.interactable = false;
+        chestsopened = 0;
         Title.SetText("GAME OVER!");
-        ToggleButtons(false);
         Invoke("DelayedFinish", 1.5f);
+        _balance += _win;
+        Balance.SetText(_balance.ToString("C"));
     }
 
     public void DelayedFinish() {
         CloseChests();
         DisableTexts();
+        Invoke("MysteryOn", 1f);
+    }
+
+    public void MysteryOn() {
+        ToggleMystery(true);
+        ToggleChests(false);
         Play.interactable = true;
     }
 
