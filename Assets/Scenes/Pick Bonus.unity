@@ -1251,9 +1251,20 @@ MonoBehaviour:
   Balance: {fileID: 42010530}
   Denom: {fileID: 390976882}
   Win: {fileID: 377822805}
+  Title: {fileID: 2041461570}
   Play: {fileID: 466884798}
   Add: {fileID: 1424977041}
   Sub: {fileID: 608779491}
+  buttons:
+  - {fileID: 1137936792}
+  - {fileID: 486744327}
+  - {fileID: 1497144870}
+  - {fileID: 883207720}
+  - {fileID: 1311160389}
+  - {fileID: 68985684}
+  - {fileID: 93344933}
+  - {fileID: 1250381240}
+  - {fileID: 142563951}
 --- !u!1 &320037023 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6878905387958286551, guid: 209fd718210817344a4c2caeb0c51405, type: 3}
@@ -3115,7 +3126,7 @@ CanvasGroup:
   m_GameObject: {fileID: 1112985111}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 0
+  m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!224 &1137936790 stripped

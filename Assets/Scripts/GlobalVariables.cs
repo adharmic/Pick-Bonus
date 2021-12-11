@@ -55,9 +55,11 @@ public class GlobalVariables : MonoBehaviour
     public TextMeshProUGUI Balance;
     public TextMeshProUGUI Denom;
     public TextMeshProUGUI Win;
+    public TextMeshProUGUI Title;
     public Button Play;
     public Button Add;
     public Button Sub;
+    public Button[] buttons;
 
     private void Start() {
         multipliers[0] = new int[]{0};
@@ -72,19 +74,9 @@ public class GlobalVariables : MonoBehaviour
         Denom.SetText(_denominator.ToString("C"));
         Win.SetText(_win.ToString("C"));
         Sub.interactable = false;
-        DisableChests();
+        ToggleChests(false);
         DisableTexts();
-        MysteryOn();
-    }
-
-    private void ResetGame() {
-        chestbuttons.interactable = false;
-    }
-
-    private void DisableChests() {
-        foreach (var item in chests) {
-            item.SetActive(false);
-        }
+        ToggleMystery(true);
     }
 
     private void DisableTexts() {
@@ -93,22 +85,16 @@ public class GlobalVariables : MonoBehaviour
         }
     }
 
-    private void EnableChests() {
+    private void ToggleChests(bool enable) {
         foreach (var item in chests) {
-            item.SetActive(true);
-            item.GetComponent<LootBox>().BounceBox(true);
+            item.SetActive(enable);
+            item.GetComponent<LootBox>().BounceBox(enable);
         }
     }
 
-    private void MysteryOn() {
+    private void ToggleMystery(bool enable) {
         foreach (var item in mysteryboxes) {
-            item.SetActive(true);
-        }
-    }
-
-    private void MysteryOff() {
-        foreach (var item in mysteryboxes) {
-            item.SetActive(false);
+            item.SetActive(enable);
         }
     }
 
@@ -136,13 +122,20 @@ public class GlobalVariables : MonoBehaviour
         Add.interactable = true;
     }
 
+    public void ToggleButtons(bool enabled) {
+        foreach (Button item in buttons) {
+            item.interactable = enabled;
+        }
+    }
+
     public void PlayGame() {
         if(SubtractBalance()) {
             // Main gameplay code here
             Play.interactable = false;
-            chestbuttons.interactable = true;
-            MysteryOff();
-            EnableChests();
+            // chestbuttons.interactable = true;
+            ToggleButtons(true);
+            ToggleMystery(false);
+            ToggleChests(true);
             GetTotal();
             Debug.Log("PRETOTAL: " + pretotal);
             if (pretotal != 0) {
@@ -153,6 +146,7 @@ public class GlobalVariables : MonoBehaviour
             }
         }
         else {
+            Play.interactable = false;
             Debug.Log("Not enough money!");
         }
     }
@@ -228,6 +222,8 @@ public class GlobalVariables : MonoBehaviour
             // END THE GAME!
             Debug.Log("GAME OVER");
             wonvalue.SetText("POOPER!");
+            chestbuttons.enabled = false;
+            Invoke("EndGame", 1.5f);
         }
         else {
             currval /= 20;
@@ -235,6 +231,30 @@ public class GlobalVariables : MonoBehaviour
             _win += currval;
             wonvalue.enabled = true;
             chestsopened++;
+            Invoke("UpdateWin", 1.5f);
+        }
+    }
+
+    public void UpdateWin() {
+        Win.SetText(_win.ToString("C"));
+    }
+
+    public void EndGame() {
+        Title.SetText("GAME OVER!");
+        ToggleButtons(false);
+        Invoke("DelayedFinish", 1.5f);
+    }
+
+    public void DelayedFinish() {
+        CloseChests();
+        DisableTexts();
+        Play.interactable = true;
+    }
+
+    public void CloseChests() {
+        foreach (GameObject item in chests) {
+            item.GetComponent<LootBox>().Close();
+            item.GetComponent<LootBox>().BounceBox(false);
         }
     }
 
